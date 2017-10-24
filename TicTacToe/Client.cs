@@ -30,37 +30,48 @@ namespace TicTacToe
             while(!done)
             {
                 JObject response = ReadMessage();
+                //form.TextConsole.Text = form.TextConsole.Text + response + "\n";
 
                 switch ((string)response["id"])
                 {
                     case "usernameRequest":
-                        new Thread(() => 
                         SendMessage(new
                         {
                             username = form.username
-                        })
-                        ).Start();
+                        });
                         break;
                     case ("yourTurn"):
-                        new Thread(() => MyTurn(response)).Start();
+                        form.SetMark((string)response["mark"]);
+                        form.AddMessageToConsole("Your turn...");
+                        form.EnableButtons();
                         break;
                     case ("opponentTurn"):
-                        new Thread(() => OpponentTurn(response)).Start();
+                        form.SetMark((string)response["mark"]);
+                        form.AddMessageToConsole("Opponents turn...");
+                        form.DisableButtons();
                         break;
                     case ("opponentSet"):
-                        new Thread(() => OpponentSet(response)).Start();
+                        form.SetButton((int)response["data"]["x"], (int)response["data"]["y"], (string)response["data"]["mark"]);
+                        done = Boolean.Parse((string)response["data"]["won"]);
+                        if (!done)
+                        {
+                            form.EnableButtons();
+                            form.AddMessageToConsole("Your turn...");
+                        }
+                        else
+                        {
+                            form.AddMessageToConsole("You lost!");
+                        }
                         break;
                     case ("waiting"):
-                        new Thread(() => form.AddMessageToConsole("Waiting for an opponent")).Start();
+                        form.AddMessageToConsole("Waiting for an opponent");
                         break;
                     case ("opponentConnected"):
-                        new Thread(() => form.AddMessageToConsole((string)response["data"])).Start();
+                        form.AddMessageToConsole((string)response["data"]);
                         break;
                     case ("won"):
-                        new Thread(() => Won()).Start();
-                        break;
-                    case ("disconnected"):
-                        new Thread(() => Disconnected()).Start();
+                        form.AddMessageToConsole("You won!");
+                        done = true;
                         break;
                 }
             }
@@ -70,66 +81,22 @@ namespace TicTacToe
             client.Close();
         }
 
-        private void Disconnected()
-        {
-            form.AddMessageToConsole("The opponent lost connection");
-            done = true;
-        }
-
-        private void Won()
-        {
-            form.AddMessageToConsole("You won!");
-            done = true;
-        }
-
-        private void OpponentSet(JObject response)
-        {
-            form.SetButton((int)response["data"]["x"], (int)response["data"]["y"], (string)response["data"]["mark"]);
-            done = Boolean.Parse((string)response["data"]["won"]);
-            if (!done)
-            {
-                form.EnableButtons();
-                form.AddMessageToConsole("Your turn...");
-            }
-            else
-            {
-                form.AddMessageToConsole("You lost!");
-            }
-        }
-
-        private void OpponentTurn(JObject response)
-        {
-            form.SetMark((string)response["mark"]);
-            form.AddMessageToConsole("Opponents turn...");
-            form.DisableButtons();
-        }
-
-        private void MyTurn(JObject response)
-        {
-            form.SetMark((string)response["mark"]);
-            form.AddMessageToConsole("Your turn...");
-            form.EnableButtons();
-        }
-
         public JObject ReadMessage()
         {
             StringBuilder message = new StringBuilder();
-            try
+            int numberOfBytesRead = 0;
+            byte[] messageBytes = new byte[4];
+            stream.Read(messageBytes, 0, messageBytes.Length);
+            byte[] receiveBuffer = new byte[BitConverter.ToInt32(messageBytes, 0)];
+
+            do
             {
-                int numberOfBytesRead = 0;
-                byte[] messageBytes = new byte[4];
-                stream.Read(messageBytes, 0, messageBytes.Length);
-                byte[] receiveBuffer = new byte[BitConverter.ToInt32(messageBytes, 0)];
+                numberOfBytesRead = stream.Read(receiveBuffer, 0, receiveBuffer.Length);
 
-                do
-                {
-                    numberOfBytesRead = stream.Read(receiveBuffer, 0, receiveBuffer.Length);
+                message.AppendFormat("{0}", Encoding.ASCII.GetString(receiveBuffer, 0, numberOfBytesRead));
 
-                    message.AppendFormat("{0}", Encoding.ASCII.GetString(receiveBuffer, 0, numberOfBytesRead));
-
-                }
-                while (message.Length < receiveBuffer.Length);
-            }catch(Exception e) { }
+            }
+            while (message.Length < receiveBuffer.Length);
 
             string response = message.ToString();
             if (response.Equals(""))
@@ -161,12 +128,6 @@ namespace TicTacToe
         internal void SetWon()
         {
             done = true;
-        }
-
-        internal void Close()
-        {
-            done = true;
-            stream.Close();
         }
     }
 }
