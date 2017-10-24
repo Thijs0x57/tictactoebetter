@@ -1,78 +1,172 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace TicTacToe
 {
     class Client
     {
-        static TcpClient client;
+        TcpClient client;
+        TicTacToe form;
+        NetworkStream stream;
+        Boolean done;
 
-        public Client()
+        public Client(TicTacToe ticTacToe)
         {
+            this.form = ticTacToe;
             client = new TcpClient("127.0.0.1", 80);
-            Console.WriteLine("Waiting for opponent...");
+            stream = client.GetStream();
+        }
 
-            Console.WriteLine(ReadMessage(client));
+        public void StartGame()
+        {
+            form.ClearField();
 
-            bool done = false;
-            while (!done)
+            done = false;
+            while(!done)
             {
-                string response = ReadMessage(client);
-                Console.WriteLine("\nResponse: " + response);
-                done = response.Equals("BYE");
+                JObject response = ReadMessage();
 
-                int hoi;
-                bool parsable = int.TryParse(response.Substring(0,1), out hoi);
-                if(parsable)
-                    Console.Write("Your answer: ");
+                switch ((string)response["id"])
+                {
+                    case "usernameRequest":
+                        new Thread(() => 
+                        SendMessage(new
+                        {
+                            username = form.username
+                        })
+                        ).Start();
+                        break;
+                    case ("yourTurn"):
+                        new Thread(() => MyTurn(response)).Start();
+                        break;
+                    case ("opponentTurn"):
+                        new Thread(() => OpponentTurn(response)).Start();
+                        break;
+                    case ("opponentSet"):
+                        new Thread(() => OpponentSet(response)).Start();
+                        break;
+                    case ("waiting"):
+                        new Thread(() => form.AddMessageToConsole("Waiting for an opponent")).Start();
+                        break;
+                    case ("opponentConnected"):
+                        new Thread(() => form.AddMessageToConsole((string)response["data"])).Start();
+                        break;
+                    case ("won"):
+                        new Thread(() => Won()).Start();
+                        break;
+                    case ("disconnected"):
+                        new Thread(() => Disconnected()).Start();
+                        break;
+                }
+            }
 
-                Thread thread = new Thread(() => WriteServer());
-                thread.Start();
-                while (!client.GetStream().DataAvailable) { }
-                thread.Abort();
+            form.DisableButtons();
+
+            client.Close();
+        }
+
+        private void Disconnected()
+        {
+            form.AddMessageToConsole("The opponent lost connection");
+            done = true;
+        }
+
+        private void Won()
+        {
+            form.AddMessageToConsole("You won!");
+            done = true;
+        }
+
+        private void OpponentSet(JObject response)
+        {
+            form.SetButton((int)response["data"]["x"], (int)response["data"]["y"], (string)response["data"]["mark"]);
+            done = Boolean.Parse((string)response["data"]["won"]);
+            if (!done)
+            {
+                form.EnableButtons();
+                form.AddMessageToConsole("Your turn...");
+            }
+            else
+            {
+                form.AddMessageToConsole("You lost!");
             }
         }
 
-        public void WriteServer()
+        private void OpponentTurn(JObject response)
         {
-            SendMessage(client, Console.ReadLine());
+            form.SetMark((string)response["mark"]);
+            form.AddMessageToConsole("Opponents turn...");
+            form.DisableButtons();
         }
 
-        public string ReadMessage(TcpClient client)
+        private void MyTurn(JObject response)
         {
-            NetworkStream stream = client.GetStream();
+            form.SetMark((string)response["mark"]);
+            form.AddMessageToConsole("Your turn...");
+            form.EnableButtons();
+        }
+
+        public JObject ReadMessage()
+        {
             StringBuilder message = new StringBuilder();
-            int numberOfBytesRead = 0;
-            byte[] messageBytes = new byte[4];
-            stream.Read(messageBytes, 0, messageBytes.Length);
-            byte[] receiveBuffer = new byte[BitConverter.ToInt32(messageBytes, 0)];
-
-            do
+            try
             {
-                numberOfBytesRead = stream.Read(receiveBuffer, 0, receiveBuffer.Length);
+                int numberOfBytesRead = 0;
+                byte[] messageBytes = new byte[4];
+                stream.Read(messageBytes, 0, messageBytes.Length);
+                byte[] receiveBuffer = new byte[BitConverter.ToInt32(messageBytes, 0)];
 
-                message.AppendFormat("{0}", Encoding.UTF8.GetString(receiveBuffer, 0, numberOfBytesRead));
+                do
+                {
+                    numberOfBytesRead = stream.Read(receiveBuffer, 0, receiveBuffer.Length);
 
-            }
-            while (message.Length < receiveBuffer.Length);
+                    message.AppendFormat("{0}", Encoding.ASCII.GetString(receiveBuffer, 0, numberOfBytesRead));
+
+                }
+                while (message.Length < receiveBuffer.Length);
+            }catch(Exception e) { }
 
             string response = message.ToString();
-            return response;
+            if (response.Equals(""))
+            {
+                dynamic winningMessage = new
+                {
+                    id = "won"
+                };
+                return JObject.Parse(JsonConvert.SerializeObject(winningMessage));
+            }
+            return JObject.Parse(response);
         }
 
-        public void SendMessage(TcpClient client, string message)
+        public void SendMessage(dynamic message)
         {
-            NetworkStream stream = client.GetStream();
+            string json = JsonConvert.SerializeObject(message);
 
-            byte[] prefixArray = BitConverter.GetBytes(message.Length);
-            byte[] requestArray = Encoding.UTF8.GetBytes(message);
+            byte[] prefixArray = BitConverter.GetBytes(json.Length);
+            byte[] requestArray = Encoding.Default.GetBytes(json);
 
-            byte[] buffer = new Byte[prefixArray.Length + message.Length];
+            byte[] buffer = new Byte[prefixArray.Length + json.Length];
             prefixArray.CopyTo(buffer, 0);
             requestArray.CopyTo(buffer, prefixArray.Length);
             stream.Write(buffer, 0, buffer.Length);
+
+            form.DisableButtons();
+        }
+
+        internal void SetWon()
+        {
+            done = true;
+        }
+
+        internal void Close()
+        {
+            done = true;
+            stream.Close();
         }
     }
 }

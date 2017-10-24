@@ -383,5 +383,18 @@ namespace TicTacToe
                    button.Enabled = true;
             }
         }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!client.done)
+            {
+                client.SendMessage(new
+                {
+                    id = "disconnected",
+                    data = new { }
+                });
+                client.Close();
+            }
+        }
     }
 }

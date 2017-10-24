@@ -233,6 +233,7 @@
             this.Controls.Add(this.Text_Console);
             this.Name = "TicTacToe";
             this.Text = "Tic-Tac-Toe";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
             this.Playing_Field.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
