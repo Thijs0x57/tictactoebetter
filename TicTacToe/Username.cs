@@ -21,10 +21,9 @@ namespace TicTacToe
         {
             if (Username_Txt.TextLength >= 4)
             {
-                this.Hide();
                 Form game = new TicTacToe(Username_Txt.Text);
-                game.FormClosed += (s, args) => this.Close();
                 game.Show();
+                this.Hide();
             }
             else
                 MessageBox.Show("The username must contain at least 4 characters");
