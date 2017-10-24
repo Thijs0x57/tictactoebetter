@@ -148,7 +148,8 @@ namespace GameServer
                     int value;
                     leaderbord.TryGetValue(winner, out value);
                     leaderbord.Remove(winner);
-                    leaderbord.Add(winner, value++);
+                    value++;
+                    leaderbord.Add(winner, value);
                 }
                 else
                 {
