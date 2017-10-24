@@ -45,6 +45,7 @@ namespace TicTacToe
             }
             foreach (Button button in Playing_Field.Controls)
             {
+                button.BackColor = Color.White;
                 button.Text = "";
             }
         }
