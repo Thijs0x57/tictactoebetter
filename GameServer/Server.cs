@@ -22,10 +22,10 @@ namespace GameServer
 
             IPAddress localhost;
 
-            bool ipIsOk = IPAddress.TryParse("127.0.0.1", out localhost);
+            bool ipIsOk = IPAddress.TryParse("192.168.43.239", out localhost);
             if (!ipIsOk) { Console.WriteLine("ip adres kan niet geparsed worden."); Environment.Exit(1); }
 
-            TcpListener listener = new TcpListener(localhost, 80);
+            TcpListener listener = new TcpListener(localhost, 1337);
             listener.Start();
 
             while (true)

@@ -16,6 +16,7 @@ namespace TicTacToe
         Client client;
         public string username;
         string mark;
+        bool full;
 
         public TextBox TextConsole { get; set; }
 
@@ -24,6 +25,7 @@ namespace TicTacToe
             InitializeComponent();
             this.username = username;
             DisableButtons();
+            full = false;
         }
 
         public void AddMessageToConsole(string message)
@@ -82,7 +84,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -106,7 +109,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -130,7 +134,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -154,7 +159,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -178,7 +184,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -203,7 +210,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -227,7 +235,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -251,7 +260,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -275,7 +285,8 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString()
+                        won = Won().ToString(),
+                        full = full
                     }
                 });
                 AddMessageToConsole("Opponents turn...");
@@ -336,6 +347,24 @@ namespace TicTacToe
                 client.SetWon();
                 return true;
             }
+
+            int TotalControls = 0;
+            foreach (Button button in Playing_Field.Controls)
+            {
+                if (button.Text != "")
+                    TotalControls++;
+            }
+
+            if (TotalControls == 9) { 
+                full = true;
+                foreach (Button button in Playing_Field.Controls)
+                {
+                    button.Text = "";
+                    button.BackColor = Color.White;
+                }
+                return true;
+            }
+
             return false;
         }
 

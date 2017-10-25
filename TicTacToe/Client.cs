@@ -18,7 +18,7 @@ namespace TicTacToe
         public Client(TicTacToe ticTacToe)
         {
             this.form = ticTacToe;
-            client = new TcpClient("127.0.0.1", 80);
+            client = new TcpClient("192.168.43.239", 1337);
             stream = client.GetStream();
         }
 
@@ -89,14 +89,19 @@ namespace TicTacToe
         {
             form.SetButton((int)response["data"]["x"], (int)response["data"]["y"], (string)response["data"]["mark"]);
             done = Boolean.Parse((string)response["data"]["won"]);
-            if (!done)
+            bool full = (bool)response["full"];
+            if (!done && !full)
             {
                 form.EnableButtons();
                 form.AddMessageToConsole("Your turn...");
             }
-            else
+            else if (done && full)
             {
                 form.AddMessageToConsole("You lost!");
+            }
+            else if (!done && full){
+                form.AddMessageToConsole("Tie!");
+                form.ClearField();
             }
         }
 
