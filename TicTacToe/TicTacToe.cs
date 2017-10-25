@@ -309,6 +309,7 @@ namespace TicTacToe
                         {
                             client.SetWon();
                             return true;
+                            Start_Btn.Enabled = true;
                         }
                     }
                     else
@@ -329,6 +330,7 @@ namespace TicTacToe
                         {
                             client.SetWon();
                             return true;
+                            Start_Btn.Enabled = true;
                         }
                     }
                     else
@@ -341,11 +343,13 @@ namespace TicTacToe
             {
                 client.SetWon();
                 return true;
+                Start_Btn.Enabled = true;
             }
             if (((Button)Playing_Field.GetControlFromPosition(0, 2)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(1, 1)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(2, 0)).Text.Equals(mark))
             {
                 client.SetWon();
                 return true;
+                Start_Btn.Enabled = true;
             }
 
             int TotalControls = 0;
@@ -363,6 +367,7 @@ namespace TicTacToe
                     button.BackColor = Color.White;
                 }
                 return true;
+                Start_Btn.Enabled = true;
             }
 
             return false;
@@ -373,6 +378,7 @@ namespace TicTacToe
             client = new Client(this);
             Thread thread = new Thread(() => client.StartGame());
             thread.Start();
+            Start_Btn.Enabled = false;
         }
 
         public void SetMark(string mark)

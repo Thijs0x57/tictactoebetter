@@ -109,7 +109,7 @@ namespace GameServer
                     case ("opponentSet"):
                         SendMessage(client2, received);
                         win1 = Boolean.Parse((string)received["data"]["won"]);
-                        if (win2)
+                        if (win1)
                         {
                             dynamic winningMessage = new
                             {
