@@ -109,7 +109,15 @@ namespace GameServer
                     case ("opponentSet"):
                         SendMessage(client2, received);
                         win1 = Boolean.Parse((string)received["data"]["won"]);
-                        winner = username1;
+                        if (win2)
+                        {
+                            dynamic winningMessage = new
+                            {
+                                id = "won"
+                            };
+                            SendMessage(client2, winningMessage);
+                            winner = username1;
+                        }
                         break;
                     case ("disconnected"):
                         SendMessage(client2, received);
@@ -127,7 +135,15 @@ namespace GameServer
                     case ("opponentSet"):
                         SendMessage(client1, received);
                         win2 = Boolean.Parse((string)received["data"]["won"]);
-                        winner = username2;
+                        if (win2)
+                        {
+                            dynamic winningMessage = new
+                            {
+                                id = "won"
+                            };
+                            SendMessage(client1, winningMessage);
+                            winner = username2;
+                        }
                         break;
                     case ("disconnected"):
                         SendMessage(client1, received);
