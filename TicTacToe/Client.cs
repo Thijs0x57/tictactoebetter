@@ -18,7 +18,7 @@ namespace TicTacToe
         public Client(TicTacToe ticTacToe)
         {
             this.form = ticTacToe;
-            client = new TcpClient("127.0.0.1", 80);
+            client = new TcpClient("192.168.43.239", 1337);
             stream = client.GetStream();
         }
 
