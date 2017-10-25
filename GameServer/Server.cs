@@ -22,7 +22,7 @@ namespace GameServer
 
             IPAddress localhost;
 
-            bool ipIsOk = IPAddress.TryParse("192.168.43.239", out localhost);
+            bool ipIsOk = IPAddress.TryParse("127.0.0.1", out localhost);
             if (!ipIsOk) { Console.WriteLine("ip adres kan niet geparsed worden."); Environment.Exit(1); }
 
             TcpListener listener = new TcpListener(localhost, 1337);
@@ -111,11 +111,6 @@ namespace GameServer
                         win1 = Boolean.Parse((string)received["data"]["won"]);
                         if (win1)
                         {
-                            dynamic winningMessage = new
-                            {
-                                id = "won"
-                            };
-                            SendMessage(client2, winningMessage);
                             winner = username1;
                         }
                         break;
@@ -137,11 +132,6 @@ namespace GameServer
                         win2 = Boolean.Parse((string)received["data"]["won"]);
                         if (win2)
                         {
-                            dynamic winningMessage = new
-                            {
-                                id = "won"
-                            };
-                            SendMessage(client1, winningMessage);
                             winner = username2;
                         }
                         break;
@@ -150,6 +140,11 @@ namespace GameServer
                         win2 = true;
                         winner = username2;
                         break;
+                }
+
+                if (win2)
+                {
+                    break;
                 }
             }
 

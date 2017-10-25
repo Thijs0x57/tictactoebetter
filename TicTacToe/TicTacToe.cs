@@ -74,9 +74,9 @@ namespace TicTacToe
                int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -84,10 +84,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if(!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -99,9 +100,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -109,11 +110,20 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
+        }
+
+        public void EnableStartBtn()
+        {
+            if (InvokeRequired)
+            {
+                this.BeginInvoke(new Action(() => Start_Btn.Enabled = true));
+            }
         }
 
         private void Btn_3_Click(object sender, EventArgs e)
@@ -124,9 +134,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -134,10 +144,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -149,9 +160,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -159,10 +170,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -174,9 +186,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -184,12 +196,13 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
-        
+
         }
 
         private void Btn_6_Click(object sender, EventArgs e)
@@ -200,9 +213,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -210,10 +223,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -225,9 +239,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -235,10 +249,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -250,9 +265,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -260,10 +275,11 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
                 AddMessageToConsole("Opponents turn...");
         }
 
@@ -275,9 +291,9 @@ namespace TicTacToe
                 int x = Playing_Field.GetPositionFromControl((Button)sender).Column;
                 int y = Playing_Field.GetPositionFromControl((Button)sender).Row;
 
-
-                SetButton(x, y, mark);
-                client.SendMessage(new
+            SetButton(x, y, mark);
+            bool won = Won();
+            client.SendMessage(new
                 {
                     id = "opponentSet",
                     data = new
@@ -285,12 +301,15 @@ namespace TicTacToe
                         x = x,
                         y = y,
                         mark = mark,
-                        won = Won().ToString(),
+                        won = won.ToString(),
                         full = full
                     }
                 });
+            if (!won)
+            {
                 AddMessageToConsole("Opponents turn...");
-            
+            }
+
         }
 
         private bool Won()
@@ -307,9 +326,7 @@ namespace TicTacToe
                         check++;
                         if (check == 3)
                         {
-                            client.SetWon();
                             return true;
-                            Start_Btn.Enabled = true;
                         }
                     }
                     else
@@ -328,9 +345,7 @@ namespace TicTacToe
                         check++;
                         if (check == 3)
                         {
-                            client.SetWon();
                             return true;
-                            Start_Btn.Enabled = true;
                         }
                     }
                     else
@@ -341,15 +356,11 @@ namespace TicTacToe
 
             if (((Button)Playing_Field.GetControlFromPosition(0, 0)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(1, 1)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(2, 2)).Text.Equals(mark))
             {
-                client.SetWon();
                 return true;
-                Start_Btn.Enabled = true;
             }
             if (((Button)Playing_Field.GetControlFromPosition(0, 2)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(1, 1)).Text.Equals(mark) && ((Button)Playing_Field.GetControlFromPosition(2, 0)).Text.Equals(mark))
             {
-                client.SetWon();
                 return true;
-                Start_Btn.Enabled = true;
             }
 
             int TotalControls = 0;
@@ -367,7 +378,6 @@ namespace TicTacToe
                     button.BackColor = Color.White;
                 }
                 return true;
-                Start_Btn.Enabled = true;
             }
 
             return false;

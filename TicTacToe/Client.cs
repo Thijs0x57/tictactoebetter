@@ -18,7 +18,7 @@ namespace TicTacToe
         public Client(TicTacToe ticTacToe)
         {
             this.form = ticTacToe;
-            client = new TcpClient("192.168.43.239", 1337);
+            client = new TcpClient("localhost", 1337);
             stream = client.GetStream();
         }
 
@@ -82,6 +82,7 @@ namespace TicTacToe
             {
                 form.AddMessageToConsole("You won!");
                 done = true;
+                form.EnableStartBtn();
             }
         }
 
@@ -103,6 +104,7 @@ namespace TicTacToe
             else if (done)
             {
                 form.AddMessageToConsole("You lost!");
+                form.EnableStartBtn();
             }
         }
 
