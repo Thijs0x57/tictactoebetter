@@ -95,13 +95,14 @@ namespace TicTacToe
                 form.EnableButtons();
                 form.AddMessageToConsole("Your turn...");
             }
+            else if (!done && full)
+            {
+                form.AddMessageToConsole("Tie!");
+                form.ClearField();
+            }
             else if (done)
             {
                 form.AddMessageToConsole("You lost!");
-            }
-            else if (!done && full){
-                form.AddMessageToConsole("Tie!");
-                form.ClearField();
             }
         }
 
