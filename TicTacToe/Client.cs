@@ -89,14 +89,19 @@ namespace TicTacToe
         {
             form.SetButton((int)response["data"]["x"], (int)response["data"]["y"], (string)response["data"]["mark"]);
             done = Boolean.Parse((string)response["data"]["won"]);
-            if (!done)
+            bool full = (bool)response["full"];
+            if (!done && !full)
             {
                 form.EnableButtons();
                 form.AddMessageToConsole("Your turn...");
             }
-            else
+            else if (done && full)
             {
                 form.AddMessageToConsole("You lost!");
+            }
+            else if (!done && full){
+                form.AddMessageToConsole("Tie!");
+                form.ClearField();
             }
         }
 
